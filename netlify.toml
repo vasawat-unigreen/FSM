@@ -1,5 +1,6 @@
-# Netlify configuration. The Next.js runtime is auto-detected from the `next`
-# dependency, so no plugin block is needed. `prisma generate` runs via the
+# Netlify configuration. The Next.js runtime is declared explicitly so it runs
+# even when the repo is linked via the API/deploy-key method (auto-detection
+# only fires for GitHub-App-connected sites). `prisma generate` runs via the
 # package.json `postinstall` hook before the build.
 
 [build]
@@ -7,6 +8,9 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 # Required environment variables (set in Netlify UI → Site settings → Env vars):
 #   DATABASE_URL      pooled Postgres connection string (e.g. Neon -pooler URL)
