@@ -1,0 +1,14 @@
+# Netlify configuration. The Next.js runtime is auto-detected from the `next`
+# dependency, so no plugin block is needed. `prisma generate` runs via the
+# package.json `postinstall` hook before the build.
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Required environment variables (set in Netlify UI → Site settings → Env vars):
+#   DATABASE_URL      pooled Postgres connection string (e.g. Neon -pooler URL)
+#   AUTH_SECRET       openssl rand -base64 32
+#   STORAGE_DRIVER    blobs   (use Netlify Blobs for uploaded photos/signatures)

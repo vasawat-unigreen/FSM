@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(npx --version)",
+      "Bash(git --version)",
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --app --src-dir --import-alias \"@/*\" --use-npm --eslint --no-turbopack --yes)",
+      "Read(//d/Coding/**)",
+      "Bash(npx --yes create-next-app@latest fsm-app --typescript --tailwind --app --src-dir --import-alias \"@/*\" --use-npm --eslint --no-turbopack --yes)",
+      "PowerShell(Get-ChildItem -Path 'D:\\\\Coding\\\\fsm-app' -Force | ForEach-Object { Move-Item -Path $_.FullName -Destination 'D:\\\\Coding\\\\FSM' -Force }; Remove-Item -Path 'D:\\\\Coding\\\\fsm-app' -Recurse -Force; Get-ChildItem -Path 'D:\\\\Coding\\\\FSM' -Force | Select-Object Name)",
+      "Bash(npm install *)",
+      "Bash(npx prisma *)",
+      "Bash(npm test *)",
+      "Bash(npm run *)"
+    ]
+  }
+}

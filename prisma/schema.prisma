@@ -1,0 +1,576 @@
+// FSM domain schema — maps skills.md §2 (Core Domain Model).
+// Conventions: UUID PKs, tenantId on every business table, soft delete via
+// deletedAt, money stored as integer cents, quantities as Decimal.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  OWNER
+  ADMIN
+  DISPATCHER
+  TECHNICIAN
+  ACCOUNTANT
+  READ_ONLY
+}
+
+enum CustomerType {
+  RESIDENTIAL
+  COMMERCIAL
+}
+
+enum JobStatus {
+  DRAFT
+  SCHEDULED
+  DISPATCHED
+  EN_ROUTE
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  INVOICED
+  CLOSED
+  CANCELLED
+}
+
+enum JobPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum JobType {
+  INSTALL
+  REPAIR
+  MAINTENANCE
+  INSPECTION
+  EMERGENCY
+}
+
+enum LineItemType {
+  LABOR
+  PART
+  FEE
+  DISCOUNT
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  EN_ROUTE
+  ARRIVED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum EstimateStatus {
+  DRAFT
+  SENT
+  APPROVED
+  REJECTED
+  EXPIRED
+  CONVERTED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PARTIAL
+  PAID
+  OVERDUE
+  VOID
+}
+
+enum PaymentMethod {
+  CARD
+  CASH
+  CHECK
+  ACH
+  OTHER
+}
+
+enum ContractFrequency {
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  SEMIANNUAL
+  ANNUAL
+  CUSTOM
+}
+
+enum ActivityKind {
+  NOTE
+  STATUS_CHANGE
+  ASSIGNMENT
+  PAYMENT
+  SYSTEM
+}
+
+// ---------------------------------------------------------------------------
+// Tenancy & users
+// ---------------------------------------------------------------------------
+
+model Tenant {
+  id        String    @id @default(uuid())
+  name      String
+  plan      String    @default("trial")
+  timezone  String    @default("UTC")
+  settings  Json      @default("{}")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  users        User[]
+  technicians  Technician[]
+  customers    Customer[]
+  contacts     Contact[]
+  sites        Site[]
+  assets       Asset[]
+  serviceItems ServiceItem[]
+  parts        Part[]
+  workOrders   WorkOrder[]
+  estimates    Estimate[]
+  invoices     Invoice[]
+  payments     Payment[]
+  contracts    Contract[]
+  appointments Appointment[]
+  attachments  Attachment[]
+  activities   Activity[]
+}
+
+model User {
+  id           String    @id @default(uuid())
+  tenantId     String
+  tenant       Tenant    @relation(fields: [tenantId], references: [id])
+  email        String
+  passwordHash String
+  name         String
+  role         UserRole  @default(TECHNICIAN)
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  technician Technician?
+  activities Activity[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+}
+
+model Technician {
+  id              String    @id @default(uuid())
+  tenantId        String
+  tenant          Tenant    @relation(fields: [tenantId], references: [id])
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id])
+  skills          String[]
+  certifications  String[]
+  homeBaseLat     Float?
+  homeBaseLng     Float?
+  hourlyCostCents Int       @default(0)
+  color           String    @default("#3b82f6")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  workOrders   WorkOrder[]
+  appointments Appointment[]
+  timeEntries  TimeEntry[]
+
+  @@index([tenantId])
+}
+
+// ---------------------------------------------------------------------------
+// Customers, sites, assets
+// ---------------------------------------------------------------------------
+
+model Customer {
+  id             String       @id @default(uuid())
+  tenantId       String
+  tenant         Tenant       @relation(fields: [tenantId], references: [id])
+  name           String
+  type           CustomerType @default(RESIDENTIAL)
+  billingAddress String?
+  paymentTerms   String       @default("net_30")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime?
+
+  contacts   Contact[]
+  sites      Site[]
+  workOrders WorkOrder[]
+  estimates  Estimate[]
+  invoices   Invoice[]
+  contracts  Contract[]
+
+  @@index([tenantId])
+}
+
+model Contact {
+  id         String   @id @default(uuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  name       String
+  email      String?
+  phone      String?
+  role       String?
+  isPrimary  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([customerId])
+}
+
+model Site {
+  id          String    @id @default(uuid())
+  tenantId    String
+  tenant      Tenant    @relation(fields: [tenantId], references: [id])
+  customerId  String
+  customer    Customer  @relation(fields: [customerId], references: [id])
+  name        String?
+  address     String
+  lat         Float?
+  lng         Float?
+  accessNotes String?
+  gateCode    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  assets     Asset[]
+  workOrders WorkOrder[]
+
+  @@index([tenantId])
+  @@index([customerId])
+}
+
+model Asset {
+  id          String    @id @default(uuid())
+  tenantId    String
+  tenant      Tenant    @relation(fields: [tenantId], references: [id])
+  siteId      String
+  site        Site      @relation(fields: [siteId], references: [id])
+  name        String
+  make        String?
+  model       String?
+  serial      String?
+  installDate DateTime?
+  warrantyEnd DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  workOrders WorkOrder[]
+
+  @@index([tenantId])
+  @@index([siteId])
+}
+
+// ---------------------------------------------------------------------------
+// Catalog: services (price book) & parts (inventory)
+// ---------------------------------------------------------------------------
+
+model ServiceItem {
+  id              String   @id @default(uuid())
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id])
+  name            String
+  category        String?
+  defaultDuration Int      @default(60) // minutes
+  priceCents      Int      @default(0)
+  taxable         Boolean  @default(true)
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+model Part {
+  id           String   @id @default(uuid())
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  sku          String
+  name         String
+  costCents    Int      @default(0)
+  priceCents   Int      @default(0)
+  qtyOnHand    Decimal  @default(0) @db.Decimal(12, 2)
+  reorderPoint Decimal  @default(0) @db.Decimal(12, 2)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([tenantId, sku])
+  @@index([tenantId])
+}
+
+// ---------------------------------------------------------------------------
+// Work orders (jobs)
+// ---------------------------------------------------------------------------
+
+model WorkOrder {
+  id             String      @id @default(uuid())
+  tenantId       String
+  tenant         Tenant      @relation(fields: [tenantId], references: [id])
+  number         Int
+  customerId     String
+  customer       Customer    @relation(fields: [customerId], references: [id])
+  siteId         String?
+  site           Site?       @relation(fields: [siteId], references: [id])
+  assetId        String?
+  asset          Asset?      @relation(fields: [assetId], references: [id])
+  assignedTechId String?
+  assignedTech   Technician? @relation(fields: [assignedTechId], references: [id])
+  contractId     String?
+  contract       Contract?   @relation(fields: [contractId], references: [id])
+
+  status      JobStatus   @default(DRAFT)
+  priority    JobPriority @default(NORMAL)
+  type        JobType     @default(REPAIR)
+  summary     String
+  description String?
+
+  scheduledStart DateTime?
+  scheduledEnd   DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  lineItems    JobLineItem[]
+  timeEntries  TimeEntry[]
+  appointments Appointment[]
+  invoice      Invoice?
+
+  @@unique([tenantId, number])
+  @@index([tenantId])
+  @@index([customerId])
+  @@index([assignedTechId])
+  @@index([status])
+}
+
+model JobLineItem {
+  id             String       @id @default(uuid())
+  tenantId       String
+  workOrderId    String
+  workOrder      WorkOrder    @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  type           LineItemType
+  description    String
+  quantity       Decimal      @default(1) @db.Decimal(12, 2)
+  unitPriceCents Int          @default(0)
+  taxable        Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+
+  @@index([workOrderId])
+}
+
+model TimeEntry {
+  id           String     @id @default(uuid())
+  tenantId     String
+  workOrderId  String
+  workOrder    WorkOrder  @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  technicianId String
+  technician   Technician @relation(fields: [technicianId], references: [id])
+  startedAt    DateTime
+  endedAt      DateTime?
+  billable     Boolean    @default(true)
+  notes        String?
+  createdAt    DateTime   @default(now())
+
+  @@index([workOrderId])
+  @@index([technicianId])
+}
+
+model Appointment {
+  id           String            @id @default(uuid())
+  tenantId     String
+  tenant       Tenant            @relation(fields: [tenantId], references: [id])
+  workOrderId  String
+  workOrder    WorkOrder         @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  technicianId String
+  technician   Technician        @relation(fields: [technicianId], references: [id])
+  startAt      DateTime
+  endAt        DateTime
+  status       AppointmentStatus @default(SCHEDULED)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@index([tenantId])
+  @@index([technicianId, startAt])
+  @@index([workOrderId])
+}
+
+// ---------------------------------------------------------------------------
+// Estimates, invoices, payments
+// ---------------------------------------------------------------------------
+
+model Estimate {
+  id            String         @id @default(uuid())
+  tenantId      String
+  tenant        Tenant         @relation(fields: [tenantId], references: [id])
+  number        Int
+  customerId    String
+  customer      Customer       @relation(fields: [customerId], references: [id])
+  status        EstimateStatus @default(DRAFT)
+  subtotalCents Int            @default(0)
+  taxCents      Int            @default(0)
+  totalCents    Int            @default(0)
+  expiresAt     DateTime?
+  approvalToken String?        @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+
+  lineItems EstimateLineItem[]
+
+  @@unique([tenantId, number])
+  @@index([tenantId])
+  @@index([customerId])
+}
+
+model EstimateLineItem {
+  id             String       @id @default(uuid())
+  tenantId       String
+  estimateId     String
+  estimate       Estimate     @relation(fields: [estimateId], references: [id], onDelete: Cascade)
+  type           LineItemType
+  description    String
+  quantity       Decimal      @default(1) @db.Decimal(12, 2)
+  unitPriceCents Int          @default(0)
+  taxable        Boolean      @default(true)
+
+  @@index([estimateId])
+}
+
+model Invoice {
+  id              String        @id @default(uuid())
+  tenantId        String
+  tenant          Tenant        @relation(fields: [tenantId], references: [id])
+  number          Int
+  customerId      String
+  customer        Customer      @relation(fields: [customerId], references: [id])
+  workOrderId     String?       @unique
+  workOrder       WorkOrder?    @relation(fields: [workOrderId], references: [id])
+  status          InvoiceStatus @default(DRAFT)
+  subtotalCents   Int           @default(0)
+  taxCents        Int           @default(0)
+  totalCents      Int           @default(0)
+  amountPaidCents Int           @default(0)
+  dueDate         DateTime?
+  issuedAt        DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+
+  lineItems InvoiceLineItem[]
+  payments  Payment[]
+
+  @@unique([tenantId, number])
+  @@index([tenantId])
+  @@index([customerId])
+  @@index([status])
+}
+
+model InvoiceLineItem {
+  id             String       @id @default(uuid())
+  tenantId       String
+  invoiceId      String
+  invoice        Invoice      @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  type           LineItemType
+  description    String
+  quantity       Decimal      @default(1) @db.Decimal(12, 2)
+  unitPriceCents Int          @default(0)
+  taxable        Boolean      @default(true)
+
+  @@index([invoiceId])
+}
+
+model Payment {
+  id           String        @id @default(uuid())
+  tenantId     String
+  tenant       Tenant        @relation(fields: [tenantId], references: [id])
+  invoiceId    String
+  invoice      Invoice       @relation(fields: [invoiceId], references: [id])
+  amountCents  Int
+  method       PaymentMethod @default(CARD)
+  processorRef String?
+  paidAt       DateTime      @default(now())
+  createdAt    DateTime      @default(now())
+
+  @@index([tenantId])
+  @@index([invoiceId])
+}
+
+// ---------------------------------------------------------------------------
+// Recurring contracts
+// ---------------------------------------------------------------------------
+
+model Contract {
+  id         String            @id @default(uuid())
+  tenantId   String
+  tenant     Tenant            @relation(fields: [tenantId], references: [id])
+  customerId String
+  customer   Customer          @relation(fields: [customerId], references: [id])
+  name       String
+  frequency  ContractFrequency @default(MONTHLY)
+  rrule      String?
+  active     Boolean           @default(true)
+  nextRunAt  DateTime?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  deletedAt  DateTime?
+
+  workOrders WorkOrder[]
+
+  @@index([tenantId])
+  @@index([customerId])
+}
+
+// ---------------------------------------------------------------------------
+// Cross-cutting: attachments & activity log
+// ---------------------------------------------------------------------------
+
+model Attachment {
+  id           String   @id @default(uuid())
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  parentType   String // "work_order" | "customer" | "invoice" | ...
+  parentId     String
+  url          String
+  mime         String?
+  uploadedById String?
+  createdAt    DateTime @default(now())
+
+  @@index([tenantId])
+  @@index([parentType, parentId])
+}
+
+model Activity {
+  id         String       @id @default(uuid())
+  tenantId   String
+  tenant     Tenant       @relation(fields: [tenantId], references: [id])
+  parentType String
+  parentId   String
+  kind       ActivityKind @default(NOTE)
+  body       String
+  authorId   String?
+  author     User?        @relation(fields: [authorId], references: [id])
+  createdAt  DateTime     @default(now())
+
+  @@index([tenantId])
+  @@index([parentType, parentId])
+}
