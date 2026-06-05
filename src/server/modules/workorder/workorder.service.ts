@@ -63,6 +63,7 @@ export async function getWorkOrder(ctx: AuthContext, id: string) {
       asset: true,
       assignedTech: { include: { user: { select: { name: true } } } },
       lineItems: { orderBy: { createdAt: "asc" } },
+      invoice: { select: { id: true, number: true, status: true } },
     },
   });
   if (!wo) throw new NotFoundError("Work order");

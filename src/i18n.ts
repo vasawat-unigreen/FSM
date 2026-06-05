@@ -9,6 +9,8 @@ import type {
   CustomerType,
   LineItemType,
   AppointmentStatus,
+  InvoiceStatus,
+  PaymentMethod,
 } from "@/generated/prisma/client";
 
 export const t = {
@@ -142,6 +144,35 @@ export const t = {
   backToJobs: "← กลับไปหน้างาน",
   description2: "สิ่งที่ต้องทำ",
 
+  // Invoices & payments
+  invoice: {
+    title: "ใบแจ้งหนี้",
+    number: "เลขที่",
+    noInvoices: "ยังไม่มีใบแจ้งหนี้",
+    create: "สร้างใบแจ้งหนี้",
+    createFromJob: "สร้างใบแจ้งหนี้จากงานนี้",
+    alreadyInvoiced: "ออกใบแจ้งหนี้แล้ว",
+    view: "ดูใบแจ้งหนี้",
+    fromJob: "จากงาน",
+    issuedAt: "วันที่ออก",
+    dueDate: "ครบกำหนด",
+    markSent: "ส่งใบแจ้งหนี้",
+    void: "ยกเลิกใบแจ้งหนี้",
+    payments: "การชำระเงิน",
+    noPayments: "ยังไม่มีการชำระเงิน",
+    recordPayment: "บันทึกการชำระเงิน",
+    amount: "จำนวนเงิน",
+    method: "ช่องทาง",
+    amountPaid: "ชำระแล้ว",
+    balanceDue: "ยอดค้างชำระ",
+    outstanding: "ยอดค้างรับรวม",
+    paidOn: "ชำระเมื่อ",
+    backToInvoices: "← กลับไปหน้าใบแจ้งหนี้",
+    customer: "ลูกค้า",
+    total: "รวมทั้งสิ้น",
+    completeJobFirst: "ต้องปิดงาน (เสร็จ) ก่อนจึงจะออกใบแจ้งหนี้ได้",
+  },
+
   // Schedule / dispatch
   schedule: "ตารางงาน",
   dispatchBoard: "กระดานจัดงาน",
@@ -239,6 +270,23 @@ export const lineItemTypeTh: Record<LineItemType, string> = {
   PART: "อะไหล่",
   FEE: "ค่าธรรมเนียม",
   DISCOUNT: "ส่วนลด",
+};
+
+export const invoiceStatusTh: Record<InvoiceStatus, string> = {
+  DRAFT: "ฉบับร่าง",
+  SENT: "ส่งแล้ว",
+  PARTIAL: "ชำระบางส่วน",
+  PAID: "ชำระแล้ว",
+  OVERDUE: "เกินกำหนด",
+  VOID: "ยกเลิก",
+};
+
+export const paymentMethodTh: Record<PaymentMethod, string> = {
+  CARD: "บัตรเครดิต",
+  CASH: "เงินสด",
+  CHECK: "เช็ค",
+  ACH: "โอนเงิน",
+  OTHER: "อื่น ๆ",
 };
 
 export const appointmentStatusTh: Record<AppointmentStatus, string> = {

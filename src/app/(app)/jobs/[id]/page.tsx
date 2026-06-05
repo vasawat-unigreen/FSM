@@ -14,6 +14,7 @@ import {
   deleteLineItemAction,
   deleteJobAction,
 } from "@/server/modules/workorder/actions";
+import { createInvoiceFromJobAction } from "@/server/modules/invoice/actions";
 import { getCustomer } from "@/server/modules/customer/customer.service";
 import { listActivity } from "@/server/lib/activity";
 import { nextStates } from "@/server/lib/job-state-machine";
@@ -45,6 +46,7 @@ export default async function JobDetailPage({
 
   const canUpdate = can(ctx.role, "job", "update");
   const canDelete = can(ctx.role, "job", "delete");
+  const canInvoice = can(ctx.role, "invoice", "create");
   const transitions = nextStates(job.status);
   const sites = customer?.sites ?? [];
 
@@ -57,6 +59,21 @@ export default async function JobDetailPage({
           <div className="flex items-center gap-2">
             <PriorityLabel priority={job.priority} />
             <StatusBadge status={job.status} />
+            {job.invoice ? (
+              <ButtonLink href={`/invoices/${job.invoice.id}`} variant="ghost">
+                {t.invoice.view} #{job.invoice.number}
+              </ButtonLink>
+            ) : (
+              canInvoice &&
+              job.status === "COMPLETED" && (
+                <form action={createInvoiceFromJobAction}>
+                  <input type="hidden" name="workOrderId" value={id} />
+                  <button className="rounded-md bg-foreground px-3 py-2 text-sm font-medium text-background hover:opacity-90">
+                    {t.invoice.createFromJob}
+                  </button>
+                </form>
+              )
+            )}
             {canUpdate && (
               <ButtonLink href={`/jobs/${id}/edit`} variant="ghost">
                 {t.edit}
