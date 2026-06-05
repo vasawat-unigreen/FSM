@@ -9,6 +9,9 @@
 [build.environment]
   NODE_VERSION = "22"
 
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 # Required environment variables (set in Netlify UI → Site settings → Env vars):
 #   DATABASE_URL      pooled Postgres connection string (e.g. Neon -pooler URL)
 #   AUTH_SECRET       openssl rand -base64 32
