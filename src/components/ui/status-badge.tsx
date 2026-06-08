@@ -2,8 +2,14 @@ import type {
   JobStatus,
   JobPriority,
   InvoiceStatus,
+  EstimateStatus,
 } from "@/generated/prisma/client";
-import { jobStatusTh, jobPriorityTh, invoiceStatusTh } from "@/i18n";
+import {
+  jobStatusTh,
+  jobPriorityTh,
+  invoiceStatusTh,
+  estimateStatusTh,
+} from "@/i18n";
 
 const STATUS_COLORS: Record<JobStatus, string> = {
   DRAFT: "bg-gray-500/15 text-gray-600 dark:text-gray-300",
@@ -50,6 +56,25 @@ export function InvoiceBadge({ status }: { status: InvoiceStatus }) {
       className={`rounded-full px-2 py-0.5 text-xs font-medium ${INVOICE_COLORS[status]}`}
     >
       {invoiceStatusTh[status]}
+    </span>
+  );
+}
+
+const ESTIMATE_COLORS: Record<EstimateStatus, string> = {
+  DRAFT: "bg-gray-500/15 text-gray-600 dark:text-gray-300",
+  SENT: "bg-blue-500/15 text-blue-600 dark:text-blue-300",
+  APPROVED: "bg-green-500/15 text-green-600 dark:text-green-300",
+  REJECTED: "bg-red-500/15 text-red-600 dark:text-red-300",
+  EXPIRED: "bg-amber-500/15 text-amber-600 dark:text-amber-300",
+  CONVERTED: "bg-teal-500/15 text-teal-600 dark:text-teal-300",
+};
+
+export function EstimateBadge({ status }: { status: EstimateStatus }) {
+  return (
+    <span
+      className={`rounded-full px-2 py-0.5 text-xs font-medium ${ESTIMATE_COLORS[status]}`}
+    >
+      {estimateStatusTh[status]}
     </span>
   );
 }

@@ -11,6 +11,7 @@ import type {
   AppointmentStatus,
   InvoiceStatus,
   PaymentMethod,
+  EstimateStatus,
 } from "@/generated/prisma/client";
 
 export const t = {
@@ -144,6 +145,37 @@ export const t = {
   backToJobs: "← กลับไปหน้างาน",
   description2: "สิ่งที่ต้องทำ",
 
+  // Estimates & customer portal
+  estimate: {
+    title: "ใบเสนอราคา",
+    number: "เลขที่",
+    create: "สร้างใบเสนอราคา",
+    noEstimates: "ยังไม่มีใบเสนอราคา",
+    markSent: "ส่งให้ลูกค้า",
+    approvalLink: "ลิงก์อนุมัติสำหรับลูกค้า",
+    approvalHint: "ส่งลิงก์นี้ให้ลูกค้าเพื่ออนุมัติหรือปฏิเสธ (ไม่ต้องล็อกอิน)",
+    convertToJob: "แปลงเป็นงาน",
+    approve: "อนุมัติ",
+    reject: "ปฏิเสธ",
+    approvedBadge: "ลูกค้าอนุมัติแล้ว",
+    rejectedBadge: "ลูกค้าปฏิเสธ",
+    expiresAt: "หมดอายุ",
+    viewJob: "ดูงานที่สร้าง",
+    backToEstimates: "← กลับไปหน้าใบเสนอราคา",
+    customer: "ลูกค้า",
+    total: "รวมทั้งสิ้น",
+    selectCustomer: "เลือกลูกค้า…",
+    needCustomerFirst: "ต้องมีลูกค้าก่อนจึงจะสร้างใบเสนอราคาได้",
+    addItem: "เพิ่มรายการ",
+    noItems: "ยังไม่มีรายการ",
+    portalReview: "กรุณาตรวจสอบรายละเอียดและเลือกอนุมัติหรือปฏิเสธ",
+    portalThanks: "ขอบคุณครับ บันทึกคำตอบของคุณเรียบร้อยแล้ว",
+    portalApproved: "คุณได้อนุมัติใบเสนอราคานี้แล้ว",
+    portalRejected: "คุณได้ปฏิเสธใบเสนอราคานี้แล้ว",
+    portalExpired: "ใบเสนอราคานี้หมดอายุแล้ว",
+    portalNotFound: "ไม่พบใบเสนอราคา",
+  },
+
   // Invoices & payments
   invoice: {
     title: "ใบแจ้งหนี้",
@@ -270,6 +302,15 @@ export const lineItemTypeTh: Record<LineItemType, string> = {
   PART: "อะไหล่",
   FEE: "ค่าธรรมเนียม",
   DISCOUNT: "ส่วนลด",
+};
+
+export const estimateStatusTh: Record<EstimateStatus, string> = {
+  DRAFT: "ฉบับร่าง",
+  SENT: "ส่งแล้ว",
+  APPROVED: "อนุมัติแล้ว",
+  REJECTED: "ปฏิเสธ",
+  EXPIRED: "หมดอายุ",
+  CONVERTED: "แปลงเป็นงานแล้ว",
 };
 
 export const invoiceStatusTh: Record<InvoiceStatus, string> = {
