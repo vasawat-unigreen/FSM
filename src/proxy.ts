@@ -5,6 +5,7 @@ import { SESSION_COOKIE } from "@/server/lib/session-token";
 // protected page. Full JWT verification still happens in the (app) layout.
 const PROTECTED = [
   "/dashboard",
+  "/reports",
   "/customers",
   "/jobs",
   "/schedule",
@@ -34,6 +35,7 @@ export function proxy(req: NextRequest) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
+    "/reports/:path*",
     "/customers/:path*",
     "/jobs/:path*",
     "/schedule/:path*",

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { prisma } from "./db";
 import { readSession } from "./session";
-import { authorize, type Action, type Resource } from "./rbac";
+import { can, type Action, type Resource } from "./rbac";
 import type { UserRole } from "@/generated/prisma/client";
 
 // The per-request auth context. Every tenant-scoped query derives its
@@ -54,6 +54,8 @@ export async function requirePermission(
   action: Action,
 ): Promise<AuthContext> {
   const user = await requireUser();
-  authorize(user.role, resource, action); // throws ForbiddenError if denied
+  // Authenticated but lacking permission: send them somewhere they can see
+  // instead of erroring (the nav already hides what a role can't access).
+  if (!can(user.role, resource, action)) redirect("/dashboard");
   return user;
 }

@@ -206,6 +206,28 @@ export const t = {
     completeJobFirst: "ต้องปิดงาน (เสร็จ) ก่อนจึงจะออกใบแจ้งหนี้ได้",
   },
 
+  // Reports & alerts
+  report: {
+    title: "รายงาน",
+    revenueMonth: "รายได้เดือนนี้",
+    revenueTotal: "รายได้รวม",
+    outstanding: "ยอดค้างรับ",
+    openJobs: "งานที่ยังไม่ปิด",
+    completedMonth: "งานเสร็จเดือนนี้",
+    jobsByStatus: "งานตามสถานะ",
+    topCustomers: "ลูกค้าตามยอดที่ชำระ",
+    techWorkload: "ภาระงานต่อช่าง",
+    jobs: "งาน",
+    alerts: "รายการที่ต้องดำเนินการ",
+    overdueInvoices: "ใบแจ้งหนี้เกินกำหนด",
+    lowStockParts: "อะไหล่ใกล้หมด",
+    dueContracts: "สัญญาถึงกำหนดสร้างงาน",
+    unscheduledJobs: "งานรอจัดตาราง",
+    nothingUrgent: "ไม่มีรายการเร่งด่วน",
+    items: "รายการ",
+    viewReports: "ดูรายงานทั้งหมด →",
+  },
+
   // Inventory
   inventory: {
     title: "คลังอะไหล่",

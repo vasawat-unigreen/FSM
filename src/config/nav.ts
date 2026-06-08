@@ -12,6 +12,7 @@ export interface NavItem {
 
 export const NAV: NavItem[] = [
   { label: t.nav.dashboard, href: "/dashboard", resource: "report", phase: 0 },
+  { label: t.report.title, href: "/reports", resource: "report", phase: 9 },
   { label: t.nav.customers, href: "/customers", resource: "customer", phase: 2 },
   { label: t.nav.jobs, href: "/jobs", resource: "job", phase: 3 },
   { label: t.nav.schedule, href: "/schedule", resource: "schedule", phase: 4 },
