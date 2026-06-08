@@ -206,6 +206,20 @@ export const t = {
     completeJobFirst: "ต้องปิดงาน (เสร็จ) ก่อนจึงจะออกใบแจ้งหนี้ได้",
   },
 
+  // Settings / admin
+  admin: {
+    businessSettings: "การตั้งค่าธุรกิจ",
+    taxRate: "อัตราภาษี (%)",
+    taxRateHint: "ใช้คำนวณภาษีในใบเสนอราคาและใบแจ้งหนี้",
+    saved: "บันทึกแล้ว",
+    addMember: "เพิ่มสมาชิกทีม",
+    changeRole: "บทบาท",
+    activate: "เปิดใช้งาน",
+    deactivate: "ปิดใช้งาน",
+    you: "(คุณ)",
+    tempPassword: "รหัสผ่านเริ่มต้น",
+  },
+
   // Reports & alerts
   report: {
     title: "รายงาน",

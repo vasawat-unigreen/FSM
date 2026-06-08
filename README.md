@@ -67,7 +67,25 @@ src/generated/prisma/    generated Prisma client (gitignored)
       check-in/out, log parts, photo upload + signature capture, installable
       PWA (manifest + service worker). Uploads stored on disk under `./uploads`,
       served tenant-scoped via `/api/files/[id]`.
-- [ ] **Phase 6 — Invoicing & payments** ... (see skills.md §7)
+- [x] **Phase 6 — Invoicing & payments**: invoice from completed job, manual
+      payments (cash/card/check/ACH), invoice lifecycle, A/R outstanding,
+      job→invoice→paid loop that auto-closes the job
+- [x] **Phase 7 — Estimates & customer portal**: estimates with line items,
+      send → public approval token, no-auth `/portal` approve/reject, convert
+      approved estimate → job
+- [x] **Phase 8 — Inventory & recurring contracts**: parts CRUD, low-stock
+      filter/badges, inline stock adjust; service contracts with frequency and
+      a generate-due action that creates the next jobs
+- [x] **Phase 9 — Reporting & alerts**: revenue (month/total), A/R, jobs by
+      status, top customers, technician workload; dashboard alerts (overdue
+      invoices, unscheduled jobs, due contracts, low stock)
+- [x] **Phase 10 — Settings & polish**: tax-rate config, team management
+      (add member, change role, activate/deactivate), forbidden→dashboard
+      redirect instead of erroring
+
+**Status: all 10 phases complete.** Live demo:
+<https://fsm-unigreen.netlify.app> (Netlify + Neon Postgres). See
+[DEPLOY.md](DEPLOY.md).
 
 **UI language: Thai** (ภาษาไทย). All copy lives in [src/i18n.ts](src/i18n.ts);
 amounts display in THB (฿).
