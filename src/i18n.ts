@@ -12,6 +12,7 @@ import type {
   InvoiceStatus,
   PaymentMethod,
   EstimateStatus,
+  ContractFrequency,
 } from "@/generated/prisma/client";
 
 export const t = {
@@ -205,6 +206,42 @@ export const t = {
     completeJobFirst: "ต้องปิดงาน (เสร็จ) ก่อนจึงจะออกใบแจ้งหนี้ได้",
   },
 
+  // Inventory
+  inventory: {
+    title: "คลังอะไหล่",
+    newPart: "เพิ่มอะไหล่",
+    noParts: "ยังไม่มีอะไหล่ในคลัง",
+    sku: "รหัส (SKU)",
+    name: "ชื่อ",
+    cost: "ต้นทุน",
+    price: "ราคาขาย",
+    onHand: "คงเหลือ",
+    reorderPoint: "จุดสั่งซื้อ",
+    lowStock: "ใกล้หมด",
+    adjustStock: "ปรับสต็อก",
+    adjustHint: "ใส่ + เพื่อเพิ่ม, - เพื่อลด",
+    lowStockOnly: "เฉพาะที่ใกล้หมด",
+    inactive: "ปิดใช้งาน",
+  },
+
+  // Recurring contracts
+  contract: {
+    title: "สัญญาบริการ",
+    newContract: "เพิ่มสัญญา",
+    noContracts: "ยังไม่มีสัญญาบริการ",
+    name: "ชื่อสัญญา",
+    customer: "ลูกค้า",
+    frequency: "ความถี่",
+    nextRun: "รอบถัดไป",
+    generateDue: "สร้างงานที่ถึงกำหนด",
+    generatedN: "สร้างงานแล้ว",
+    active: "ใช้งาน",
+    paused: "หยุดชั่วคราว",
+    selectCustomer: "เลือกลูกค้า…",
+    create: "สร้างสัญญา",
+    needCustomerFirst: "ต้องมีลูกค้าก่อนจึงจะสร้างสัญญาได้",
+  },
+
   // Schedule / dispatch
   schedule: "ตารางงาน",
   dispatchBoard: "กระดานจัดงาน",
@@ -302,6 +339,15 @@ export const lineItemTypeTh: Record<LineItemType, string> = {
   PART: "อะไหล่",
   FEE: "ค่าธรรมเนียม",
   DISCOUNT: "ส่วนลด",
+};
+
+export const contractFrequencyTh: Record<ContractFrequency, string> = {
+  WEEKLY: "รายสัปดาห์",
+  MONTHLY: "รายเดือน",
+  QUARTERLY: "รายไตรมาส",
+  SEMIANNUAL: "รายครึ่งปี",
+  ANNUAL: "รายปี",
+  CUSTOM: "กำหนดเอง",
 };
 
 export const estimateStatusTh: Record<EstimateStatus, string> = {

@@ -15,6 +15,7 @@ export const NAV: NavItem[] = [
   { label: t.nav.customers, href: "/customers", resource: "customer", phase: 2 },
   { label: t.nav.jobs, href: "/jobs", resource: "job", phase: 3 },
   { label: t.nav.schedule, href: "/schedule", resource: "schedule", phase: 4 },
+  { label: t.contract.title, href: "/contracts", resource: "job", phase: 8 },
   { label: t.nav.estimates, href: "/estimates", resource: "estimate", phase: 7 },
   { label: t.nav.invoices, href: "/invoices", resource: "invoice", phase: 6 },
   { label: t.nav.inventory, href: "/inventory", resource: "inventory", phase: 8 },
