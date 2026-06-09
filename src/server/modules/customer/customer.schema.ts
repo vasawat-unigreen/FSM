@@ -2,7 +2,10 @@ import { z } from "zod";
 
 export const customerSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  type: z.enum(["RESIDENTIAL", "COMMERCIAL"]).default("RESIDENTIAL"),
+  type: z
+    .enum(["RESIDENTIAL", "COMMERCIAL", "SERVICE_STATION", "FUEL_DEPOT", "OTHER"])
+    .default("RESIDENTIAL"),
+  taxId: z.string().trim().optional().or(z.literal("")),
   billingAddress: z.string().trim().optional().or(z.literal("")),
   paymentTerms: z.string().default("net_30"),
 });

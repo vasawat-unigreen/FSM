@@ -29,6 +29,7 @@ export default async function EditCustomerPage({
           id: customer.id,
           name: customer.name,
           type: customer.type,
+          taxId: customer.taxId ?? "",
           billingAddress: customer.billingAddress ?? "",
           paymentTerms: customer.paymentTerms,
         }}

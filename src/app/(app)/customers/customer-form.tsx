@@ -4,14 +4,24 @@ import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import type { FormState } from "@/server/modules/customer/actions";
 import { Field, SubmitButton, FormError } from "@/components/ui/form";
-import { t } from "@/i18n";
+import { t, customerTypeTh } from "@/i18n";
+import type { CustomerType } from "@/generated/prisma/client";
 
 type Action = (prev: FormState, formData: FormData) => Promise<FormState>;
+
+const TYPES: CustomerType[] = [
+  "RESIDENTIAL",
+  "COMMERCIAL",
+  "SERVICE_STATION",
+  "FUEL_DEPOT",
+  "OTHER",
+];
 
 export interface CustomerDefaults {
   id?: string;
   name?: string;
-  type?: "RESIDENTIAL" | "COMMERCIAL";
+  type?: CustomerType;
+  taxId?: string;
   billingAddress?: string;
   paymentTerms?: string;
 }
@@ -42,10 +52,15 @@ export function CustomerForm({
           defaultValue={defaults.type ?? "RESIDENTIAL"}
           className="w-full rounded-md border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/40 dark:border-white/20"
         >
-          <option value="RESIDENTIAL">ที่พักอาศัย</option>
-          <option value="COMMERCIAL">เชิงพาณิชย์</option>
+          {TYPES.map((v) => (
+            <option key={v} value={v}>
+              {customerTypeTh[v]}
+            </option>
+          ))}
         </select>
       </label>
+
+      <Field label={t.taxId} name="taxId" defaultValue={defaults.taxId} />
 
       <Field
         label={t.billingAddress}

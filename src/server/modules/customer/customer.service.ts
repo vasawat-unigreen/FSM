@@ -62,6 +62,7 @@ export async function createCustomer(ctx: AuthContext, input: CustomerInput) {
       tenantId: ctx.tenantId,
       name: input.name.trim(),
       type: input.type,
+      taxId: n(input.taxId),
       billingAddress: n(input.billingAddress),
       paymentTerms: input.paymentTerms,
     },
@@ -81,6 +82,7 @@ export async function updateCustomer(
     data: {
       name: input.name.trim(),
       type: input.type,
+      taxId: n(input.taxId),
       billingAddress: n(input.billingAddress),
       paymentTerms: input.paymentTerms,
     },

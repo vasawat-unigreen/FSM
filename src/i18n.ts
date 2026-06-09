@@ -79,6 +79,7 @@ export const t = {
   jobsCount: "งาน",
   billingAddress: "ที่อยู่สำหรับวางบิล",
   paymentTerms: "เงื่อนไขการชำระเงิน",
+  taxId: "เลขประจำตัวผู้เสียภาษี",
   contacts: "ผู้ติดต่อ",
   noContacts: "ยังไม่มีผู้ติดต่อ",
   sitesAndAssets: "สถานที่และอุปกรณ์",
@@ -368,6 +369,9 @@ export const roleTh: Record<UserRole, string> = {
 export const customerTypeTh: Record<CustomerType, string> = {
   RESIDENTIAL: "ที่พักอาศัย",
   COMMERCIAL: "เชิงพาณิชย์",
+  SERVICE_STATION: "สถานีบริการ",
+  FUEL_DEPOT: "คลังน้ำมัน",
+  OTHER: "อื่น ๆ",
 };
 
 export const lineItemTypeTh: Record<LineItemType, string> = {

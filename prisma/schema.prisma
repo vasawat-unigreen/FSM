@@ -27,6 +27,9 @@ enum UserRole {
 enum CustomerType {
   RESIDENTIAL
   COMMERCIAL
+  SERVICE_STATION
+  FUEL_DEPOT
+  OTHER
 }
 
 enum JobStatus {
@@ -201,6 +204,7 @@ model Customer {
   tenant         Tenant       @relation(fields: [tenantId], references: [id])
   name           String
   type           CustomerType @default(RESIDENTIAL)
+  taxId          String?
   billingAddress String?
   paymentTerms   String       @default("net_30")
   createdAt      DateTime     @default(now())

@@ -42,7 +42,14 @@ export default async function CustomerDetailPage({
     <div className="space-y-6">
       <PageHeader
         title={customer.name}
-        subtitle={customer.billingAddress ?? undefined}
+        subtitle={
+          [
+            customer.taxId ? `${t.taxId}: ${customer.taxId}` : null,
+            customer.billingAddress,
+          ]
+            .filter(Boolean)
+            .join(" · ") || undefined
+        }
         action={
           <div className="flex items-center gap-2">
             <Badge>{customerTypeTh[customer.type]}</Badge>
