@@ -4,6 +4,7 @@ import { SESSION_COOKIE } from "@/server/lib/session-token";
 // Lightweight gate: bounce cookie-less requests to /login before they hit a
 // protected page. Full JWT verification still happens in the (app) layout.
 const PROTECTED = [
+  "/choose",
   "/dashboard",
   "/reports",
   "/customers",
@@ -34,6 +35,8 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
+    "/choose/:path*",
+    "/choose",
     "/dashboard/:path*",
     "/reports/:path*",
     "/customers/:path*",

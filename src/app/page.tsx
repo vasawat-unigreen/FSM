@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/server/lib/auth";
 
-export default function Home() {
-  // Phase 1 will redirect to /login when unauthenticated.
-  redirect("/dashboard");
+export default async function Home() {
+  const user = await getCurrentUser();
+  redirect(user ? "/choose" : "/login");
 }

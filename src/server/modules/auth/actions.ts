@@ -28,7 +28,7 @@ export async function signupAction(
     return { error: "Could not create account. That email may already be in use." };
   }
 
-  redirect("/dashboard");
+  redirect("/choose");
 }
 
 export async function loginAction(
@@ -40,18 +40,16 @@ export async function loginAction(
     return { error: z.flattenError(parsed.error).formErrors[0] ?? "Invalid input" };
   }
 
-  let role: string | undefined;
   try {
     const session = await login(parsed.data);
     await setSessionCookie(session);
-    role = session.role;
   } catch (err) {
     if (err instanceof AuthError) return { error: err.message };
     return { error: "Something went wrong. Please try again." };
   }
 
-  // Technicians land in the mobile field app; everyone else in the office.
-  redirect(role === "TECHNICIAN" ? "/field" : "/dashboard");
+  // Let the user pick desktop (office) or mobile (field) after each sign-in.
+  redirect("/choose");
 }
 
 export async function logoutAction(): Promise<void> {

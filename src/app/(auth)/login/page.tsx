@@ -3,6 +3,6 @@ import { getCurrentUser } from "@/server/lib/auth";
 import { LoginForm } from "./login-form";
 
 export default async function LoginPage() {
-  if (await getCurrentUser()) redirect("/dashboard");
+  if (await getCurrentUser()) redirect("/choose");
   return <LoginForm />;
 }

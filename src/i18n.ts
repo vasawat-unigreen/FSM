@@ -17,6 +17,17 @@ import type {
 
 export const t = {
   appName: "FSM",
+
+  // Mode chooser (shown after login)
+  choose: {
+    greeting: "สวัสดี",
+    heading: "เลือกโหมดการใช้งาน",
+    desktop: "โหมดเดสก์ท็อป (สำนักงาน)",
+    desktopHint: "จัดการลูกค้า งาน ตารางงาน ใบแจ้งหนี้ และรายงาน",
+    mobile: "โหมดมือถือ (ภาคสนาม)",
+    mobileHint: "สำหรับช่าง: งานของฉัน จับเวลา ถ่ายรูป เซ็นรับงาน",
+  },
+
   appTagline: "ระบบจัดการงานบริการภาคสนาม",
 
   // Auth

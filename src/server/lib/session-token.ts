@@ -5,7 +5,7 @@ import type { UserRole } from "@/generated/prisma/client";
 // and reused on the edge.
 
 export const SESSION_COOKIE = "fsm_session";
-export const MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
+export const MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 days — stay signed in
 
 export interface SessionPayload {
   userId: string;
